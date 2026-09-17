@@ -68,6 +68,22 @@ bytes, decoded data only.
 
 No R2E software or ROM is included here.
 
+## Why it lives here and not in MAME
+
+It was offered as [mame#15713](https://github.com/mamedev/mame/pull/15713) and
+closed without merging, for a good reason: it ignores MAME's floppy
+infrastructure. The disk arrives through a private image device that takes one
+flat file of already decoded sectors, instead of a `floppy_image_format_t` under
+`src/lib/formats` turning a flux level dump into cell data and back, with the
+driver taking a `FLOPPY_CONNECTOR` and running its discrete serial controller off
+the real cell stream. Done properly, write back and flux dumps work by
+construction rather than only for the one file this device understands. That is a
+rewrite, not a fixup, so the branch was withdrawn rather than left sitting in the
+queue.
+
+What is here works and boots both machines. Anyone wanting it upstream should
+start from the format side.
+
 ## Known gaps
 
 `STAT` loads but the CCP never jumps to 0100, so it produces no output; `DDT`
